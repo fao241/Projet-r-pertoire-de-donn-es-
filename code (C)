@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_CONTACTS 50
+#define MAX_LENGTH 50
+
+// Variables globales
+char noms[MAX_CONTACTS][MAX_LENGTH];
+char prenoms[MAX_CONTACTS][MAX_LENGTH];
+char numeros[MAX_CONTACTS][11];
+char emails[MAX_CONTACTS][MAX_LENGTH];
+int nombreContacts = 0;
+
+// Fonction pour ajouter une personne
+void Creer_Enregistrement() {
+    if (nombreContacts >= MAX_CONTACTS) {
+        printf("Le répertoire est plein, impossible d'ajouter une nouvelle personne.\n");
+        return;
+    }
+
+    char nomTemp[MAX_LENGTH];
+    char prenomTemp[MAX_LENGTH];
+    char numeroTemp[11];
+    char emailTemp[MAX_LENGTH];
+
+    printf("Entrez le nom : ");
+    scanf("%s", nomTemp);
+    printf("Entrez le prénom : ");
+    scanf("%s", prenomTemp);
+    printf("Entrez le numéro de téléphone (10 chiffres sans espace) : ");
+    scanf("%s", numeroTemp);
+    if (strlen(numeroTemp) != 10) {
+        printf("Numéro de téléphone invalide. L'ajout a échoué.\n");
+        return;
+    }
+    printf("Entrez l'adresse e-mail : ");
+    scanf("%s", emailTemp);
+
+    strcpy(noms[nombreContacts], nomTemp);
+    strcpy(prenoms[nombreContacts], prenomTemp);
+    strcpy(numeros[nombreContacts], numeroTemp);
+    strcpy(emails[nombreContacts], emailTemp);
+
+    nombreContacts++;
+    printf("La personne a été ajoutée avec succès !\n");
+}
+
+// Fonction pour afficher le répertoire
+void Affiche_Repertoire() {
+    if (nombreContacts == 0) {
+        printf("Le répertoire est vide.\n");
+        return;
+    }
+
+    printf("Contenu du répertoire :\n");
+    for (int i = 0; i < nombreContacts; i++) {
+        printf("Contact %d :\n", i + 1);
+        printf("  Nom       : %s\n", noms[i]);
+        printf("  Prénom    : %s\n", prenoms[i]);
+        printf("  Téléphone : %s\n", numeros[i]);
+        printf("  Email     : %s\n", emails[i]);
+    }
+}
+
+// Fonction pour rechercher une personne par numéro de téléphone
+void Recherche() {
+    char numeroRecherche[11];
+    printf("Entrez le numéro de téléphone à rechercher : ");
+    scanf("%s", numeroRecherche);
+
+    for (int i = 0; i < nombreContacts; i++) {
+        if (strcmp(numeros[i], numeroRecherche) == 0) {
+            printf("Personne trouvée :\n");
+            printf("  Nom       : %s\n", noms[i]);
+            printf("  Prénom    : %s\n", prenoms[i]);
+            printf("  Téléphone : %s\n", numeros[i]);
+            printf("  Email     : %s\n", emails[i]);
+            return;
+        }
+    }
+    printf("Personne non trouvée dans le répertoire.\n");
+}
+
+// Fonction pour retirer une personne par nom
+void Retirer() {
+    char nomRecherche[MAX_LENGTH];
+    printf("Entrez le nom de la personne à retirer : ");
+    scanf("%s", nomRecherche);
+
+    for (int i = 0; i < nombreContacts; i++) {
+        if (strcmp(noms[i], nomRecherche) == 0) {
+            for (int j = i; j < nombreContacts - 1; j++) {
+                strcpy(noms[j], noms[j + 1]);
+                strcpy(prenoms[j], prenoms[j + 1]);
+                strcpy(numeros[j], numeros[j + 1]);
+                strcpy(emails[j], emails[j + 1]);
+            }
+            nombreContacts--;
+            printf("La personne a été retirée du répertoire.\n");
+            return;
+        }
+    }
+    printf("Personne non trouvée dans le répertoire.\n");
+}
+
+// Fonction principale
+int main() {
+    int Action;
+
+    while (1) {
+        printf("Que voulez-vous faire :\n");
+        printf("* Ajouter une personne         (1)\n");
+        printf("* Afficher le répertoire       (2)\n");
+        printf("* Faire une recherche par numéro (3)\n");
+        printf("* Retirer une personne par nom (4)\n");
+        printf("* Terminer                     (5)\n");
+
+        scanf("%d", &Action);
+        if (Action == 1) Creer_Enregistrement();
+        if (Action == 2) Affiche_Repertoire();
+        if (Action == 3) Recherche();
+        if (Action == 4) Retirer();
+        if (Action == 5) break;
+
+        printf("\n");
+    }
+
+    printf("Programme terminé...\n");
+    return 0;
+}
